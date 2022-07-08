@@ -1,0 +1,50 @@
+body{
+    margin: 0;
+    text-align: center;
+}
+
+header{
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+button{
+    height: 100px;
+    width: 100px;
+    margin: auto;
+}
+
+#img-div{
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 15px;
+    justify-content: center;
+}
+
+img{
+    height: 100px;
+    width: 100px;
+    margin: 15px;
+}
+
+img:hover{
+    background-color: aqua;
+    border-radius: 30px;
+}
+
+.rotateImgVertical{
+    transform: rotate(90deg);
+}
+
+#gameboard{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: auto;
+    justify-content: center;
+}
