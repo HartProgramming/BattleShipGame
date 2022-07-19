@@ -51,17 +51,38 @@ img:hover{
     border: 3px solid black;
 }
 
+.ship-computer-class{
+    background-color: aliceblue;
+        height: 100px;
+        width: 100px;
+        border: 3px solid black;
+}
+.ship-computer-class:hover{
+    background-color: blue;
+}
+
 .rotateImgVertical{
     transform: rotate(90deg);
 }
 
 #gameboard{
     display: flex;
+}
+
+#playerBoard{
     flex-direction: row;
-    flex-wrap: wrap;
-    margin: auto;
-    width: 1100px;
-    justify-content: center;
+        flex-wrap: wrap;
+        margin: auto;
+        width: 1100px;
+        justify-content: center;
+}
+
+#computerBoard{
+    flex-direction: row;
+        flex-wrap: wrap;
+        margin: auto;
+        width: 1100px;
+        justify-content: center;
 }
 
 .standard-box{
@@ -72,4 +93,18 @@ img:hover{
 }
 .standard-box:hover{
     background-color: blue;
+}
+
+.hit-class{
+    background-color: black;
+        height: 100px;
+        width: 100px;
+        border: 3px solid black;
+}
+
+.miss-class{
+    background-color: red;
+        height: 100px;
+        width: 100px;
+        border: 3px solid black;
 }
