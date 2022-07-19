@@ -132,9 +132,8 @@ function refresh(arr) {
     generateHeader()
     body.append(gameboardSection)
     gameboardSection.style.display = 'flex';
-    console.log()
-   
     if (arr === divArray) {
+        console.log(arr)
         gameboardSection.append(playerBoardArticle);
         playerBoardArticle.style.display = 'flex'
         for (let i = 0; i < 100; i++) {
@@ -145,15 +144,16 @@ function refresh(arr) {
             div.classList.add("standard-box");
             div.classList.remove('ship-class');
         }
-       
-        placement(carrier, carrierShipSize, playerCarrierArr);
-        placement(submarine, submarineShipSize, playerSubmarineArr);
-        placement(destroyer, destroyerShipSize, playerDestroyerArr);
-        placement(cruiser, cruiserShipSize, playerCruiserArr);
+        console.log(divArray)
+        console.log(playerCarrierArr)
+        console.log(playerSubmarineArr)
+        console.log(playerDestroyerArr)
+        console.log(playerCruiserArr)
+        console.log(carrier)
+        console.log(carrierShipSize)
     } else if (arr === computerDivArray) {
         gameboardSection.removeChild(playerBoardArticle);
         gameboardSection.append(computerBoardArticle);
-       
         for (let i = 0; i < 100; i++) {
             let div = document.createElement("div");
             div.setAttribute('id', i)
@@ -163,12 +163,13 @@ function refresh(arr) {
             div.classList.add("standard-box");
             div.classList.remove('ship-computer-class');
         }
-       
+        
         placement(carrier, computerCarrierShipSize, computerCarrierArr);
         placement(submarine, computerSubmarineShipSize, computerSubmarineArr);
         placement(destroyer, computerDestroyerShipSize, computerDestroyerArr);
         placement(cruiser, computerCruiserShipSize, computerCruiserArr);
     }
+    return 
 }
 
 /* New Game button invokes refresh function */
@@ -183,20 +184,32 @@ const randomPlacement = num => {
     return Math.floor(Math.random() * num)
 }
 
+carrier.addEventListener('click', function(){
+    placement(carrier, carrierShipSize, playerCarrierArr);
+})
+
+destroyer.addEventListener('click', function(){
+    placement(submarine, submarineShipSize, playerSubmarineArr);
+
+})
+
+cruiser.addEventListener('click', function(){
+    placement(destroyer, destroyerShipSize, playerDestroyerArr);
+
+})
+
+submarine.addEventListener('click', function(){
+    placement(cruiser, cruiserShipSize, playerCruiserArr);
+
+})
+
 /* Placement function checks whether the shipPlace is true, if true
 it will add a click event to the ship and add the img-hover class to 
 highlight the selection then will invoke the placeShip function that
 will inherit the shipSize */
-function placement(ship, shipSize, shipArr) {
-    console.log(ship)
-    ship.classList.remove('rotateImgVertical')
-    ship.addEventListener("click", function () {
-        ship.classList.add("img-hover")
-        console.log(ship)
-        console.log(shipSize)
 
-        placeShip(ship, shipSize, shipArr)
-    })
+function placement(ship, shipSize, shipArr) {    
+            placeShip(ship, shipSize, shipArr)
     if (shipArr === computerCarrierArr || shipArr === computerCruiserArr || shipArr === computerDestroyerArr || shipArr === computerSubmarineArr) {
         placeShip(ship, shipSize, shipArr);
     }
@@ -211,6 +224,8 @@ and then invoke the generateShipLocation which will accept ship size */
 function placeShip(ship, shipSize, shipArr) {
     let origin
     let testVert;
+    console.log(ship)
+    console.log(shipArr)
     ship.style.display = 'none';
     if (shipArr === computerCarrierArr || shipArr === computerCruiserArr || shipArr === computerDestroyerArr || shipArr === computerSubmarineArr) {
         origin = computerDivArray[randomPlacement(computerDivArray.length)];
@@ -218,7 +233,6 @@ function placeShip(ship, shipSize, shipArr) {
         origin.classList.remove('standard-box');
         ship.style.display = 'none';
         testVert = randomPlacement(10);
-        console.log(testVert)
         if (testVert > 5) {
             vertical = true;
             generateShipLocation(ship, shipSize, shipArr, origin)
@@ -227,24 +241,20 @@ function placeShip(ship, shipSize, shipArr) {
             generateShipLocation(ship, shipSize, shipArr, origin)
         }
     }
-    console.log(shipSize)
     divArray.forEach(x => {
-        console.log(shipSize)
         x.addEventListener('click', function () {
             this.classList.add("ship-class")
             this.classList.remove("standard-box")
-            console.log(shipSize)
             origin = x;
             ship.style.display = 'none';
             ship.classList.remove('img-hover')
             generateShipLocation(ship, shipSize, shipArr, origin)
-            shipArr = undefined;
             x = undefined;
             header.append(btnsDiv)
             btnsDiv.style.display = 'flex'
             btnsDiv.append(rotateBtn)
             rotateBtn.style.display = 'flex'
-            return
+            shipArr = undefined;
         })
     })
 }
@@ -254,17 +264,25 @@ number and the shipsize, will add the ship class and the ship computer
 class */
 function generateShipLocation(ship, shipSize, shipArr, origin) {
     let nextLocation;
-    console.log(vertical)
-    console.log(shipSize)
-    console.log(ship)
+    if(shipSize === carrierShipSize){
+        shipArr = playerCarrierArr;
+        console.log(shipArr)
+    }
+    if(shipSize === destroyerShipSize){
+        shipArr = playerDestroyerArr;
+    }
+    if(shipSize === cruiserShipSize){
+        shipArr = playerCruiserArr;
+    }
+    if(shipSize === submarineShipSize){
+        shipArr = playerSubmarineArr
+    }
+    console.log(shipArr)
     if (shipArr.length === 0) {
         shipArr.push(origin)
-        console.log(shipArr)
-        console.log(origin.id)
+        console.log(origin)
     }
-    console.log(origin)
     while (shipSize !== 0 && vertical) {
-        console.log(nextLocation)
         if (shipArr === playerCarrierArr || shipArr === playerCruiserArr || shipArr === playerDestroyerArr || shipArr === playerSubmarineArr) {
             if (ship === carrier && parseInt(origin.id) > 60 || ship === submarine && parseInt(origin.id) > 70 || ship === cruiser && parseInt(origin.id) > 80 || ship === destroyer && parseInt(origin.id) > 90) {
                 nextLocation = document.getElementById(parseInt(origin.id) - (shipSize * 10))
@@ -276,7 +294,6 @@ function generateShipLocation(ship, shipSize, shipArr, origin) {
 
             shipArr.push(nextLocation);
             shipSize -= 1;
-            console.log(nextLocation.id)
         } else if (shipArr === computerCarrierArr || shipArr === computerCruiserArr || shipArr === computerDestroyerArr || shipArr === computerSubmarineArr) {
             if (ship === carrier && parseInt(origin.id) > 60 || ship === submarine && parseInt(origin.id) > 70 || ship === cruiser && parseInt(origin.id) > 80 || ship === destroyer && parseInt(origin.id) > 90) {
                 nextLocation = document.getElementById(parseInt(origin.id) - (shipSize * 10))
@@ -288,14 +305,13 @@ function generateShipLocation(ship, shipSize, shipArr, origin) {
 
             shipArr.push(nextLocation);
             shipSize -= 1;
-            console.log(nextLocation.id)
         }
 
 
 
     }
     while (shipSize !== 0 && vertical === false) {
-
+      
         if (shipArr === computerCarrierArr || shipArr === computerCruiserArr || shipArr === computerDestroyerArr || computerSubmarineArr === shipArr) {
             if (origin.id.endsWith('9') || origin.id.endsWith('8') || origin.id.endsWith('7') || origin.id.endsWith('6')) {
                 nextLocation = document.getElementById(parseInt(origin.id) - (shipSize))
@@ -313,31 +329,25 @@ function generateShipLocation(ship, shipSize, shipArr, origin) {
             } else {
                 nextLocation = document.getElementById(parseInt(origin.id) + (shipSize))
             }
-            nextLocation.classList.add('ship-class')
-            nextLocation.classList.remove('standard-box')
-            console.log('hello')
-            shipArr.push(nextLocation)
-            shipSize -= 1;
+            
         }
+        console.log(shipArr)
+        console.log(ship)
+        nextLocation.classList.add('ship-class')
+        console.log('added')
+        shipArr.push(nextLocation);
+        nextLocation.classList.remove('standard-box')
+        shipSize -= 1;
 
     }
-
     console.log(shipArr)
-    console.log(playerCarrierArr)
-    console.log(playerSubmarineArr)
-    console.log(playerCruiserArr)
-    console.log(playerDestroyerArr)
-    console.log('done')
-    console.log(computerCarrierArr);
-    console.log(computerCruiserArr);
-    console.log(computerDestroyerArr);
-    console.log(computerSubmarineArr);
-    ship.style.display = 'none';
-    shipArr = null;
     appendLockShipBtn();
     if (computerCarrierArr.length > 0 && computerCruiserArr.length > 0 && computerDestroyerArr.length > 0 && computerSubmarineArr.length > 0) {
         lockShipPlacement()
     }
+    ship = undefined;
+    shipArr = undefined;
+    shipSize = undefined;
     return
 }
 
@@ -445,37 +455,35 @@ function lockShipPlacement() {
         cruiser.style.display = 'flex';
         destroyer.style.display = 'flex';
         turn.textContent = 'Place Ships Again';
-
-        for (let x of playerCarrierArr) {
+        for(let x of divArray){
             x.classList.remove('ship-class')
         }
-        for (let y of playerCruiserArr) {
-            y.classList.remove('ship-class')
+        while(divArray.length !== 0){
+            divArray.pop()
+            playerCarrierArr.pop()
+            playerSubmarineArr.pop()
+            playerCruiserArr.pop()
+            playerDestroyerArr.pop()
         }
-        for (let i of playerDestroyerArr) {
-            i.classList.remove('ship-class')
-        }
-        for (let z of playerSubmarineArr) {
-            z.classList.remove('ship-class')
-           
-        }
-        setTimeout(() => {
-            restartPlacement(divArray)
+        
+       
 
-        }, 300);
-        shipLocked = false;
+            console.log('not-locked')
+        restartPlacement(divArray)
+
         return
     } else if (computerSubmarineArr.some(checkSubmarineArr) === true || computerCarrierArr.some(checkCarrierArr) === true || computerCruiserArr.some(checkCruiserArr) === true || computerDestroyerArr.some(checkDestroyerArr) === true) {
-        for (let x of playerCarrierArr) {
+        for (let x of computerCarrierArr) {
             x.classList.remove('ship-comoputer-class')
+            
         }
-        for (let y of playerCruiserArr) {
+        for (let y of computerCruiserArr) {
             y.classList.remove('ship-computer-class')
         }
-        for (let i of playerDestroyerArr) {
+        for (let i of computerDestroyerArr) {
             i.classList.remove('ship-computer-class')
         }
-        for (let z of playerSubmarineArr) {
+        for (let z of computerSubmarineArr) {
             z.classList.remove('ship-computer-class')
         }
         setTimeout(() => {
@@ -493,10 +501,11 @@ function lockShipPlacement() {
 function restartPlacement(arr) {
     if (arr === divArray) {
         arr = [];
-        refresh(arr)
+        console.log('calling refresh')
+        refresh(divArray)
     } else if (arr === computerDivArray) {
         arr = [];
-        refresh(arr)
+        refresh(computerDivArray)
     }
 }
 
