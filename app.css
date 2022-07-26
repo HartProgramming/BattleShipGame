@@ -1,110 +1,123 @@
-body{
-    margin: 0;
-    text-align: center;
+body {
+  margin: 0;
+  text-align: center;
 }
 
-header{
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: center;
+header {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-button{
-    height: 100px;
-    width: 100px;
-    margin: auto;
+button {
+  height: 100px;
+  width: 100px;
+  margin: auto;
 }
 
-#img-div{
-    margin: auto;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin: 15px;
-    justify-content: center;
+#img-div {
+  margin: auto;
+  display: flex;
+  width: 90%;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-img{
-    height: 100px;
-    width: 100px;
-    margin: 15px;
+.ship-div {
+  width: 20%;
+  margin: auto;
+  margin-left: 15px;
+  margin-right: 15px;
+  display: flex;
+  border: 2px solid black;
+  justify-content: center;
 }
 
-.img-hover{
-    background-color: aqua;
-        border: 4px solid blue;
-        border-radius: 30px;
+.ships-selector {
+  margin: 38px;
+  padding: 0;
 }
 
-img:hover{
-    background-color: aqua;
-    border: 4px solid blue;
-    border-radius: 30px;
+.carrier-ship{
+  height: 4.6vmin;
+  width: 4.6vmin;
+  background-color: gray;
 }
 
-.ship-class{
-    background-color: green;
-    height: 100px;
-    width: 100px;
-    border: 3px solid black;
+.submarine-ship{
+ height: 4.6vmin;
+ width: 4.6vmin;
+  background-color: gray;
 }
 
-.ship-computer-class{
-    background-color: aliceblue;
-        height: 100px;
-        width: 100px;
-        border: 3px solid black;
-}
-.ship-computer-class:hover{
-    background-color: blue;
+.cruiser-ship{
+  height: 150px;
+  width: 50px;
+  background-color: gray;
 }
 
-.rotateImgVertical{
-    transform: rotate(90deg);
+.destroyer-ship{
+  height: 100px;
+  width: 50px;
+  background-color: gray;
 }
 
-#gameboard{
-    display: flex;
+.ship-computer-class {
+  background-color: aliceblue;
+  height: 50px;
+  width: 50px;
+  border: 3px solid black;
+}
+.ship-computer-class:hover {
+  background-color: blue;
 }
 
-#playerBoard{
-    flex-direction: row;
-        flex-wrap: wrap;
-        margin: auto;
-        width: 1100px;
-        justify-content: center;
+.rotateImgVertical {
+  transform: rotate(90deg);
 }
 
-#computerBoard{
-    flex-direction: row;
-        flex-wrap: wrap;
-        margin: auto;
-        width: 1100px;
-        justify-content: center;
+#define-board {
+  display: flex;
+  margin: auto;
+  justify-content: space-evenly;
 }
 
-.standard-box{
-    height: 100px;
-    width: 100px;
-    background-color: aliceblue;
-    border: 3px solid black;
-}
-.standard-box:hover{
-    background-color: blue;
+#gameboard {
+  display: flex;
+  margin: auto;
+  width: 100%;
+  justify-content: center;
 }
 
-.hit-class{
-    background-color: black;
-        height: 100px;
-        width: 100px;
-        border: 3px solid black;
+.battleship-grid {
+  display: grid;
+  margin: 2vmin;
+  background-color: aquamarine;
+  grid-template-rows: repeat(10, 4.6vmin);
+  grid-template-columns: repeat(10, 4.6vmin);
 }
 
-.miss-class{
-    background-color: red;
-        height: 100px;
-        width: 100px;
-        border: 3px solid black;
+.battleship-div{
+
+  border: 1px solid gray;
+}
+
+.standard-box:hover {
+  background-color: blue;
+}
+
+.hit-class {
+  background-color: black;
+  height: 50px;
+  width: 100px;
+  border: 3px solid black;
+}
+
+.miss-class {
+  background-color: red;
+  height: 50px;
+  width: 50px;
+  border: 3px solid black;
 }

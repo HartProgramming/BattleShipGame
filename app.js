@@ -5,35 +5,15 @@ const body = document.querySelector('body');
 /* turn is the textContent in the header that allows for the user to see
 the status of the game */
 const turn = document.querySelector("#turn");
-/* generateBoard is a selector to a button that generates the playerBoard
-allowing the user to place ships */
-const generateBoard = document.querySelector("#generate-board");
+
 /* rotateBtn is a button that rotates the ships verticaly or horizontally */
 const rotateBtn = document.createElement('button');
 rotateBtn.setAttribute('id', 'rotate-img')
 /* gameboardSection is the primary section in which the game takes place
 this section handles the transition between playerBoard and computerBoard */
 const gameboardSection = document.querySelector("#gameboard");
-/* playerBoardArticle is the playerBoard that contains all the player ships
-and guesses by the computer */
-const playerBoardArticle = document.createElement('article');
-playerBoardArticle.setAttribute('id', 'playerBoard');
-/* computerBoardArticle is the computerBoard that contains all the computer ships
-and guesses by the player */
-const computerBoardArticle = document.createElement('article');
-computerBoardArticle.setAttribute('id', 'computerBoard');
-/* destroyer is an image of the smallest ship that contains 2 boxes */
-const destroyer = document.createElement('img');
-destroyer.setAttribute('id', 'destroyer');
-/* cruiser is an image of the second smallest ship that contains 3 boxes */
-const cruiser = document.createElement('img');
-cruiser.setAttribute('id', 'cruiser');
-/* submarine is an image of the second largest ship that contains 4 boxes */
-const submarine = document.createElement('img');
-submarine.setAttribute('id', 'submarine');
-/* carriser is an image of the largest shp that contains 5 boxes */
-const carrier = document.createElement('img');
-carrier.setAttribute('id', 'carrier');
+const computerBoard = document.querySelector('#computerboard');
+const playerBoard = document.querySelector('#playerboard');
 /* the header contains turn, imgs, and btns; it is used to append and remove
 elements at different times in the game */
 const header = document.querySelector('header');
@@ -52,635 +32,140 @@ lockShips.setAttribute('id', 'lock-ships');
 const restartBtn = document.createElement('button');
 restartBtn.setAttribute('id', 'restart-button');
 const shipStatus = document.createElement('h3');
-shipStatus.setAttribute('id', 'ship-status')
+shipStatus.setAttribute('id', 'ship-status');
+const carrier = document.createElement('div');
+const destroyer = document.createElement('div');
+const cruiser = document.createElement('div');
+const submarine = document.createElement('div');
+carrier.setAttribute('id', 'carrier');
+destroyer.setAttribute('id', 'destroyer');
+cruiser.setAttribute('id', 'cruiser');
+submarine.setAttribute('id', 'submarine');
+cruiser.classList.add('cruiser-ship');
+submarine.classList.add('submarine-ship');
+destroyer.classList.add('destroyer-ship');
+carrier.classList.add('carrier-ship');
+
+const carrierDiv = document.createElement('div');
+const destroyerDiv = document.createElement('div');
+const submarineDiv = document.createElement('div');
+const cruiserDiv = document.createElement('div');
+const standardBox = document.querySelectorAll('.standard-box');
+carrierDiv.classList.add('ships-selector');
+destroyerDiv.classList.add('ships-selector');
+cruiserDiv.classList.add('ships-selector');
+submarineDiv.classList.add('ships-selector');
+imgDiv.append(carrierDiv);
+imgDiv.append(destroyerDiv);
+imgDiv.append(cruiserDiv);
+imgDiv.append(submarineDiv);
 
 
+/* Creates the four different ships */
+function createShip(ship, size, shipDiv) {
+    for (let i = 0; i < size; i++) {
+        div = document.createElement('div')
+        ship.append(div);
+    }
+    ship.setAttribute('draggable', 'true');
+    shipDiv.append(ship)
+}
+
+createShip(carrier, 4, carrierDiv)
+createShip(destroyer, 2, destroyerDiv)
+createShip(cruiser, 3, cruiserDiv);
+createShip(submarine, 3, submarineDiv);
+
+
+const playerDivArray = [];
+const computerDivArray = [];
+
+/* Creates Board for player and computer */
+function createBoard(article, arr) {
+    for (let i = 0; i < 100; i++) {
+        div = document.createElement('div');
+        div.setAttribute('id', i);
+        article.append(div)
+        arr.push(div);
+        div.classList.add('battleship-div')
+    }
+    gameboardSection.append(article)
+    article.classList.add('battleship-grid')
+
+}
+createBoard(computerBoard, computerDivArray);
+createBoard(playerBoard, playerDivArray);
+
+console.log(playerDivArray)
 
 /* Rotate image event */
 /* Click event rotates ship icons 90 deg */
-let vertical = false;
+let vertical = true;
 /* Rotate function checks if the icons are vertical if not
 then it adds the rotateImgVertical class and changes vertical
 to true. Else if vertical is true then the rotateImgVertical class
 is removed */
+
+const icons = [carrier, destroyer, cruiser, submarine];
+
 function rotate() {
     if (vertical === false) {
         for (let x of icons) {
-            x.classList.add("rotateImgVertical");
+            x.classList.remove("rotateImgVertical");
         }
         vertical = true;
     } else if (vertical === true) {
         for (let x of icons) {
-            x.classList.remove("rotateImgVertical");
+            x.classList.add("rotateImgVertical");
         }
         vertical = false;
     }
 }
 
-
-let icons = [destroyer, cruiser, submarine, carrier]
-
+btnsDiv.append(rotateBtn)
+rotateBtn.textContent = 'Rotate Ships'
 rotateBtn.addEventListener('click', rotate)
 /* Declare divarray is empty then pushes div to it for creation */
 
-const divArray = [];
-const computerDivArray = [];
-const computerCarrierArr = [];
-const computerSubmarineArr = [];
-const computerCruiserArr = [];
-const computerDestroyerArr = [];
-const computerCarrierShipSize = 4;
-const computerSubmarineShipSize = 3;
-const computerCruiserShipSize = 2
-const computerDestroyerShipSize = 1;
-const playerCarrierArr = [];
-const playerSubmarineArr = [];
-const playerCruiserArr = [];
-const playerDestroyerArr = [];
-const carrierShipSize = 4;
-const submarineShipSize = 3;
-const cruiserShipSize = 2
-const destroyerShipSize = 1;
-
-function generateHeader() {
-    header.append(btnsDiv);
-    btnsDiv.appendChild(rotateBtn);
-    header.append(imgDiv);
-    imgDiv.append(destroyer);
-    imgDiv.append(cruiser);
-    imgDiv.append(submarine);
-    imgDiv.append(carrier);
-    btnsDiv.append(startGame);
-    imgDiv.style.display = 'flex';
-    rotateBtn.style.display = 'flex'
-    startGame.textContent = 'Start Game';
-    carrier.src = 'carriericon.png';
-    submarine.src = 'submarineicon.png';
-    cruiser.src = 'cruisericon.png';
-    destroyer.src = 'destroyericon.png';
-    rotateBtn.textContent = "Rotate Ship";
-    rotateBtn.addEventListener("click", rotate);
-    btnsDiv.style.display = 'flex'
-    generateBoard.style.display = 'none';
-    lockShips.style.display = 'none';
+for (let x of playerDivArray) {
+    x.addEventListener('drop', drop);
+    x.addEventListener('dragover', dragOver)
 }
 
-
-/* Refresh function resets the board, generates boxes with standard-box class
-and resets the text */
-function refresh(arr) {
-    generateHeader()
-    body.append(gameboardSection)
-    gameboardSection.style.display = 'flex';
-    if (arr === divArray) {
-        console.log(arr)
-        gameboardSection.append(playerBoardArticle);
-        playerBoardArticle.style.display = 'flex'
-        for (let i = 0; i < 100; i++) {
-            let div = document.createElement("div");
-            div.setAttribute('id', i)
-            arr.push(div);
-            playerBoardArticle.append(div);
-            div.classList.add("standard-box");
-            div.classList.remove('ship-class');
-        }
-        console.log(divArray)
-        console.log(playerCarrierArr)
-        console.log(playerSubmarineArr)
-        console.log(playerDestroyerArr)
-        console.log(playerCruiserArr)
-        console.log(carrier)
-        console.log(carrierShipSize)
-    } else if (arr === computerDivArray) {
-        gameboardSection.removeChild(playerBoardArticle);
-        gameboardSection.append(computerBoardArticle);
-        for (let i = 0; i < 100; i++) {
-            let div = document.createElement("div");
-            div.setAttribute('id', i)
-            arr.push(div);
-            computerBoardArticle.append(div);
-            computerBoardArticle.style.display = 'flex';
-            div.classList.add("standard-box");
-            div.classList.remove('ship-computer-class');
-        }
-        
-        placement(carrier, computerCarrierShipSize, computerCarrierArr);
-        placement(submarine, computerSubmarineShipSize, computerSubmarineArr);
-        placement(destroyer, computerDestroyerShipSize, computerDestroyerArr);
-        placement(cruiser, computerCruiserShipSize, computerCruiserArr);
-    }
-    return 
+for (let y of icons) {
+    y.addEventListener('dragstart', dragStart);
+    y.addEventListener('dragging', dragging);
+    y.addEventListener('dragend', dragEnd);
+    console.log(y)
 }
 
-/* New Game button invokes refresh function */
-generateBoard.addEventListener("click", function () {
-    refresh(divArray)
-})
-
-
-/* Random placement function allows user and comnputer to randomly
-place their ships */
-const randomPlacement = num => {
-    return Math.floor(Math.random() * num)
+function dragStart(e) {
+    e.dataTransfer.setData('text', e.target.id);
+    console.log(e.target.id);
+    console.log(e)
 }
 
-carrier.addEventListener('click', function(){
-    placement(carrier, carrierShipSize, playerCarrierArr);
-})
-
-destroyer.addEventListener('click', function(){
-    placement(submarine, submarineShipSize, playerSubmarineArr);
-
-})
-
-cruiser.addEventListener('click', function(){
-    placement(destroyer, destroyerShipSize, playerDestroyerArr);
-
-})
-
-submarine.addEventListener('click', function(){
-    placement(cruiser, cruiserShipSize, playerCruiserArr);
-
-})
-
-/* Placement function checks whether the shipPlace is true, if true
-it will add a click event to the ship and add the img-hover class to 
-highlight the selection then will invoke the placeShip function that
-will inherit the shipSize */
-
-function placement(ship, shipSize, shipArr) {    
-            placeShip(ship, shipSize, shipArr)
-    if (shipArr === computerCarrierArr || shipArr === computerCruiserArr || shipArr === computerDestroyerArr || shipArr === computerSubmarineArr) {
-        placeShip(ship, shipSize, shipArr);
-    }
+function drop(e) {
+    e.preventDefault();
+    let data = e.dataTransfer.getData('text');
+    console.log(data)
+    console.log(parseInt(e.target.id) + 1)
+    e.target.classList.add(document.getElementById(data).classList);
+    let cool = parseInt(e.target.id) + 10;
+    console.log(cool)
+    document.getElementById(cool).classList.add(document.getElementById(data).classList)
+    console.log(playerDivArray)
 }
 
-
-/* placeShip function accepts the shipSize and will generate click
-events on all game divs allowing the user to select their ship location
-and then invoke the generateShipLocation which will accept ship size */
-
-
-function placeShip(ship, shipSize, shipArr) {
-    let origin
-    let testVert;
-    console.log(ship)
-    console.log(shipArr)
-    ship.style.display = 'none';
-    if (shipArr === computerCarrierArr || shipArr === computerCruiserArr || shipArr === computerDestroyerArr || shipArr === computerSubmarineArr) {
-        origin = computerDivArray[randomPlacement(computerDivArray.length)];
-        origin.classList.add('ship-computer-class');
-        origin.classList.remove('standard-box');
-        ship.style.display = 'none';
-        testVert = randomPlacement(10);
-        if (testVert > 5) {
-            vertical = true;
-            generateShipLocation(ship, shipSize, shipArr, origin)
-        } else {
-            vertical = false;
-            generateShipLocation(ship, shipSize, shipArr, origin)
-        }
-    }
-    divArray.forEach(x => {
-        x.addEventListener('click', function () {
-            this.classList.add("ship-class")
-            this.classList.remove("standard-box")
-            origin = x;
-            ship.style.display = 'none';
-            ship.classList.remove('img-hover')
-            generateShipLocation(ship, shipSize, shipArr, origin)
-            x = undefined;
-            header.append(btnsDiv)
-            btnsDiv.style.display = 'flex'
-            btnsDiv.append(rotateBtn)
-            rotateBtn.style.display = 'flex'
-            shipArr = undefined;
-        })
-    })
-}
-
-/* Generates a players and computers ship location based on the origin
-number and the shipsize, will add the ship class and the ship computer 
-class */
-function generateShipLocation(ship, shipSize, shipArr, origin) {
-    let nextLocation;
-    if(shipSize === carrierShipSize){
-        shipArr = playerCarrierArr;
-        console.log(shipArr)
-    }
-    if(shipSize === destroyerShipSize){
-        shipArr = playerDestroyerArr;
-    }
-    if(shipSize === cruiserShipSize){
-        shipArr = playerCruiserArr;
-    }
-    if(shipSize === submarineShipSize){
-        shipArr = playerSubmarineArr
-    }
-    console.log(shipArr)
-    if (shipArr.length === 0) {
-        shipArr.push(origin)
-        console.log(origin)
-    }
-    while (shipSize !== 0 && vertical) {
-        if (shipArr === playerCarrierArr || shipArr === playerCruiserArr || shipArr === playerDestroyerArr || shipArr === playerSubmarineArr) {
-            if (ship === carrier && parseInt(origin.id) > 60 || ship === submarine && parseInt(origin.id) > 70 || ship === cruiser && parseInt(origin.id) > 80 || ship === destroyer && parseInt(origin.id) > 90) {
-                nextLocation = document.getElementById(parseInt(origin.id) - (shipSize * 10))
-            } else {
-                nextLocation = document.getElementById(parseInt(origin.id) + (shipSize * 10))
-            }
-            nextLocation.classList.add('ship-class')
-            nextLocation.classList.remove('standard-box')
-
-            shipArr.push(nextLocation);
-            shipSize -= 1;
-        } else if (shipArr === computerCarrierArr || shipArr === computerCruiserArr || shipArr === computerDestroyerArr || shipArr === computerSubmarineArr) {
-            if (ship === carrier && parseInt(origin.id) > 60 || ship === submarine && parseInt(origin.id) > 70 || ship === cruiser && parseInt(origin.id) > 80 || ship === destroyer && parseInt(origin.id) > 90) {
-                nextLocation = document.getElementById(parseInt(origin.id) - (shipSize * 10))
-            } else {
-                nextLocation = document.getElementById(parseInt(origin.id) + (shipSize * 10))
-            }
-            nextLocation.classList.add('ship-computer-class')
-            nextLocation.classList.remove('standard-box')
-
-            shipArr.push(nextLocation);
-            shipSize -= 1;
-        }
-
-
-
-    }
-    while (shipSize !== 0 && vertical === false) {
-      
-        if (shipArr === computerCarrierArr || shipArr === computerCruiserArr || shipArr === computerDestroyerArr || computerSubmarineArr === shipArr) {
-            if (origin.id.endsWith('9') || origin.id.endsWith('8') || origin.id.endsWith('7') || origin.id.endsWith('6')) {
-                nextLocation = document.getElementById(parseInt(origin.id) - (shipSize))
-            } else {
-                nextLocation = document.getElementById(parseInt(origin.id) + (shipSize))
-            }
-            nextLocation.classList.add('ship-computer-class')
-            nextLocation.classList.remove('standard-box')
-            shipArr.push(nextLocation)
-            shipSize -= 1;
-        }
-        if (shipArr === playerCarrierArr || shipArr === playerCruiserArr || shipArr === playerDestroyerArr || shipArr === playerSubmarineArr) {
-            if (origin.id.endsWith('9') || origin.id.endsWith('8') || origin.id.endsWith('7') || origin.id.endsWith('6')) {
-                nextLocation = document.getElementById(parseInt(origin.id) - (shipSize))
-            } else {
-                nextLocation = document.getElementById(parseInt(origin.id) + (shipSize))
-            }
-            
-        }
-        console.log(shipArr)
-        console.log(ship)
-        nextLocation.classList.add('ship-class')
-        console.log('added')
-        shipArr.push(nextLocation);
-        nextLocation.classList.remove('standard-box')
-        shipSize -= 1;
-
-    }
-    console.log(shipArr)
-    appendLockShipBtn();
-    if (computerCarrierArr.length > 0 && computerCruiserArr.length > 0 && computerDestroyerArr.length > 0 && computerSubmarineArr.length > 0) {
-        lockShipPlacement()
-    }
-    ship = undefined;
-    shipArr = undefined;
-    shipSize = undefined;
-    return
-}
-
-function checkSubmarineArr(arr1) {
-    if (arr1.className === 'ship-class') {
-        for (let x of playerCruiserArr) {
-            for (let y of playerDestroyerArr) {
-                for (let i of playerCarrierArr) {
-                    if (x === arr1 || y === arr1 || i === arr1) {
-                        return true
-                    }
-                }
-            }
-        }
-    } else if (arr1.className === 'ship-computer-class') {
-        for (let x of computerCruiserArr) {
-            for (let y of computerDestroyerArr) {
-                for (let i of computerCarrierArr) {
-                    if (x === arr1 || y === arr1 || i === arr1) {
-                        return true
-                    }
-                }
-            }
-        }
-    }
-}
-function checkCarrierArr(arr1) {
-    if (arr1.className === 'ship-class') {
-        for (let x of playerCruiserArr) {
-            for (let y of playerDestroyerArr) {
-                for (let i of playerSubmarineArr) {
-                    if (x === arr1 || y === arr1 || i === arr1) {
-                        return true
-                    }
-                }
-            }
-        }
-    } else if (arr1.className === 'ship-computer-class') {
-        for (let x of computerCruiserArr) {
-            for (let y of computerDestroyerArr) {
-                for (let i of computerSubmarineArr) {
-                    if (x === arr1 || y === arr1 || i === arr1) {
-                        return true
-                    }
-                }
-            }
-        }
-    }
-}
-function checkCruiserArr(arr1) {
-    if (arr1.className === 'ship-class') {
-        for (let x of playerSubmarineArr) {
-            for (let y of playerDestroyerArr) {
-                for (let i of playerCarrierArr) {
-                    if (x === arr1 || y === arr1 || i === arr1) {
-                        return true
-                    }
-                }
-            }
-        }
-    } else if (arr1.className === 'ship-computer-class') {
-        for (let x of computerSubmarineArr) {
-            for (let y of computerDestroyerArr) {
-                for (let i of computerCarrierArr) {
-                    if (x === arr1 || y === arr1 || i === arr1) {
-                        return true
-                    }
-                }
-            }
-        }
-    }
-}
-function checkDestroyerArr(arr1) {
-    if (arr1.className === 'ship-class') {
-        for (let x of playerCruiserArr) {
-            for (let y of playerSubmarineArr) {
-                for (let i of playerCarrierArr) {
-                    if (x === arr1 || y === arr1 || i === arr1) {
-                        return true
-                    }
-                }
-            }
-        }
-    } else if (arr1.className === 'ship-computer-class') {
-        for (let x of computerCruiserArr) {
-            for (let y of computerSubmarineArr) {
-                for (let i of computerCarrierArr) {
-                    if (x === arr1 || y === arr1 || i === arr1) {
-                        return true
-                    }
-                }
-            }
-        }
-    }
-}
-
-/* lockShipPlace loops through all the player ship arrays and locks
-their placement if none of them collide, if they do all of the ships
-are removed from the board and generate again */
-function lockShipPlacement() {
-
-    if (playerSubmarineArr.some(checkSubmarineArr) === true || playerCarrierArr.some(checkCarrierArr) === true || playerCruiserArr.some(checkCruiserArr) === true || playerDestroyerArr.some(checkDestroyerArr) === true) {
-        carrier.style.display = 'flex';
-        submarine.style.display = 'flex';
-        cruiser.style.display = 'flex';
-        destroyer.style.display = 'flex';
-        turn.textContent = 'Place Ships Again';
-        for(let x of divArray){
-            x.classList.remove('ship-class')
-        }
-        while(divArray.length !== 0){
-            divArray.pop()
-            playerCarrierArr.pop()
-            playerSubmarineArr.pop()
-            playerCruiserArr.pop()
-            playerDestroyerArr.pop()
-        }
-        
-       
-
-            console.log('not-locked')
-        restartPlacement(divArray)
-
-        return
-    } else if (computerSubmarineArr.some(checkSubmarineArr) === true || computerCarrierArr.some(checkCarrierArr) === true || computerCruiserArr.some(checkCruiserArr) === true || computerDestroyerArr.some(checkDestroyerArr) === true) {
-        for (let x of computerCarrierArr) {
-            x.classList.remove('ship-comoputer-class')
-            
-        }
-        for (let y of computerCruiserArr) {
-            y.classList.remove('ship-computer-class')
-        }
-        for (let i of computerDestroyerArr) {
-            i.classList.remove('ship-computer-class')
-        }
-        for (let z of computerSubmarineArr) {
-            z.classList.remove('ship-computer-class')
-        }
-        setTimeout(() => {
-            restartPlacement(computerDivArray)
-
-        }, 300);
-
-        return
-    } else {
-        transitionGame()
-    }
-}
-
-
-function restartPlacement(arr) {
-    if (arr === divArray) {
-        arr = [];
-        console.log('calling refresh')
-        refresh(divArray)
-    } else if (arr === computerDivArray) {
-        arr = [];
-        refresh(computerDivArray)
-    }
-}
-
-const appendLockShipBtn = () => {
-    if (carrier.style.display === 'none' && cruiser.style.display === 'none' && submarine.style.display === 'none' && destroyer.style.display === 'none') {
-        btnsDiv.append(lockShips);
-        lockShips.style.display = 'flex'
-        rotateBtn.textContent = 'Rotate Ship'
-        lockShips.textContent = 'Lock Ships';
-        rotateBtn.style.display = 'none';
-    } else {
-        lockShips.style.display = 'none';
-        startGame.style.display = 'none';
-        rotateBtn.style.display = 'none';
-    }
-}
-
-function transitionGame() {
-    turn.textContent = "Computer Placing Ships";
-    turn.appendChild(shipStatus);
-    shipStatus.textContent = 'Waiting';
-    shipStatus.style.display = 'flex';
-
-    setTimeout(() => {
-        body.append(gameboardSection)
-        gameboardSection.removeChild(playerBoardArticle)
-        gameboardSection.appendChild(computerBoardArticle);
-        computerBoardArticle.style.display = 'flex';
-
-    }, 700);
-    for (let i = 0; i < 100; i++) {
-        let cpuDiv = document.createElement('div');
-        cpuDiv.setAttribute('id', i)
-        computerBoardArticle.append(cpuDiv);
-        computerDivArray.push(cpuDiv)
-        cpuDiv.classList.add('standard-box');
-    } lockShips.style.display = 'none';
-    startGame.style.display = 'flex';
-    setTimeout(() => {
-        console.log(computerDivArray)
-        placement(carrier, computerCarrierShipSize, computerCarrierArr);
-        console.log(computerCarrierArr)
-        placement(destroyer, computerDestroyerShipSize, computerDestroyerArr);
-        placement(cruiser, computerCruiserShipSize, computerCruiserArr);
-        placement(submarine, computerSubmarineShipSize, computerSubmarineArr);
-        lockShips.style.display = 'none';
-        turn.textContent = 'Start Game';
-    }, 1000);
-}
-
-
-lockShips.addEventListener('click', lockShipPlacement)
-
-
-function playerTurn() {
-    console.log(computerBoardArticle)
-    for (let i of computerDivArray) {
-        i.addEventListener('click', function () {
-            if (computerCarrierArr.includes(this) || computerCruiserArr.includes(this) || computerDestroyerArr.includes(this) || computerSubmarineArr.includes(this)) {
-                this.classList.remove('ship-computer-class')
-                this.classList.add('hit-class')
-                i = undefined;
-                shipStatus.textContent = 'Hit';
-                computerBoardArticle.style.display = 'flex';
-                gameboardSection.removeChild(computerBoardArticle);
-                gameboardSection.appendChild(playerBoardArticle)
-
-                for (let x of computerCarrierArr) {
-                    for (let y of computerCruiserArr) {
-                        for (let i of computerDestroyerArr) {
-                            for (let z of computerSubmarineArr) {
-                                if (x.className === 'hit-class') {
-                                    shipStatus.textContent = 'Carrier Sunk';
-                                } else if (y.className === 'hit-class') {
-                                    shipStatus.textContent = 'Cruiser Sunk';
-                                } else if (i.className === 'hit-class') {
-                                    shipStatus.textContent = 'Destroyer Sunk';
-                                } else if (z.className = 'hit-class') {
-                                    shipStatus.textContent = 'Submarine Sunk';
-                                }
-                            }
-                        }
-                    }
-                } if (this.className === 'hit-class') {
-                    gameboardSection.removeChild(computerBoardArticle);
-                    gameboardSection.appendChild(playerBoardArticle);
-                    turn.textContent = 'Computer Turn';
-                    i = undefined;
-                    setTimeout(() => {
-
-                        computerTurn()
-                    }, 2000);
-                }
-            } else {
-                setTimeout(() => {
-                    i.classList.remove('ship-class');
-                    i.classList.add('miss-class');
-                    shipStatus.textContent = 'Miss';
-                }, 500)
-
-                setTimeout(() => {
-                    gameboardSection.removeChild(computerBoardArticle);
-                    gameboardSection.appendChild(playerBoardArticle);
-                    turn.textContent = 'Computer Turn';
-                    i = undefined;
-                }, 600);
-
-                setTimeout(() => {
-
-                    computerTurn()
-                }, 3500);
-
-            }
-        })
-    }
+function dragging(e) {
 
 }
 
-/* Computer Turn declares computer guess, then creates a random computer guess on the board,
-if computer guess is in any of the player ship arrays then alter the board and call 
-playerTurn()*/
-function computerTurn() {
-    let computerGuess;
-    computerGuess = randomPlacement(computerDivArray.length);
-    for (let i of divArray) {
-        if (parseInt(i.id) === computerGuess) {
-            if (playerCarrierArr.includes(i) || playerCruiserArr.includes(i) || playerDestroyerArr.includes(i) || playerSubmarineArr.includes(i)) {
-                i.classList.remove('ship-class')
-                i.classList.add('hit-class')
-                setTimeout(() => {
-                    gameboardSection.removeChild(playerBoardArticle);
-                    gameboardSection.appendChild(computerBoardArticle);
-                    turn.textContent = 'Player Turn';
-                }, 600);
-
-                setTimeout(() => {
-
-                    playerTurn()
-                }, 2000);
-                i = undefined;
-            } else {
-                i.classList.remove('ship-class');
-                i.classList.add('miss-class');
-                setTimeout(() => {
-                    gameboardSection.removeChild(playerBoardArticle);
-                    gameboardSection.appendChild(computerBoardArticle);
-                    turn.textContent = 'Player Turn';
-                }, 600);
-
-                i = undefined;
-                setTimeout(() => {
-
-                    playerTurn()
-                }, 2000);
-
-            }
-        }
-    }
+function dragEnd(e) {
 
 }
 
-const game = () => {
-    startGame.style.display = 'none';
-    btnsDiv.append(restartBtn);
-    restartBtn.style.display = 'flex';
-    restartBtn.textContent = 'Restart'
-    turn.textContent = 'Player Turn';
-    playerTurn();
+function dragOver(e) {
+    e.preventDefault();
 }
 
-const restart = () => {
-    restartBtn.style.display = 'none';
-    generateBoard.style.display = 'flex';
-}
-
-startGame.addEventListener('click', game)
-
-restartBtn.addEventListener('click', restart) 
