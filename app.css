@@ -66,9 +66,6 @@ button {
 
 .ship-computer-class {
   background-color: aliceblue;
-  height: 50px;
-  width: 50px;
-  border: 3px solid black;
 }
 .ship-computer-class:hover {
   background-color: blue;
